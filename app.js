@@ -1,11 +1,21 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const moviesRoutes = require("./routes/movies-routes");
-const authRoutes = require("./routes/auth-routes")
+const authRoutes = require("./routes/auth-routes");
 
 const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:8080",
+  })
+);
 
 app.use("/movies/", moviesRoutes);
 app.use("/auth/", authRoutes);
