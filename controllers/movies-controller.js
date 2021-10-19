@@ -1,4 +1,4 @@
-const createError = require("http-errors");
+
 
 const DUMMY_DATA = [
   { id: "m1", title: "Batman" },
@@ -14,7 +14,7 @@ const getMovieById = (req, res, next) => {
   });
 
   if (!movie) {
-    throw new createError(401, "Could not find a movie for the provided id.");
+    // throw new createError(401, "Could not find a movie for the provided id.");
   }
 
   res.json({ movie });

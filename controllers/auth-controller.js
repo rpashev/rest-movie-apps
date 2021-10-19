@@ -1,4 +1,4 @@
-const createError = require("http-errors");
+
 const User = require("../models/user");
 
 
@@ -13,7 +13,7 @@ const Register = async (req, res, next) => {
       res.send("Success")
       
     } catch(err) {
-      throw createError(400, "You suck")
+      // throw createError(400, "You suck")
     }
 }
 
