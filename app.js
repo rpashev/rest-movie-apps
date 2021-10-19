@@ -5,6 +5,7 @@ const cors = require("cors");
 const moviesRoutes = require("./routes/movies-routes");
 const authRoutes = require("./routes/auth-routes");
 const HttpError = require("./models/http-error");
+const checkAuth = require("./middleware/checkAuth")
 
 const app = express();
 
@@ -18,8 +19,10 @@ app.use(
   })
 );
 
-app.use("/movies/", moviesRoutes);
 app.use("/auth/", authRoutes);
+
+app.use(checkAuth);
+app.use("/movies/", moviesRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route!", 404);

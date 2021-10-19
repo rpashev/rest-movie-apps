@@ -95,7 +95,65 @@ const register = async (req, res, next) => {
 
   res.status(201).json({ userId: user.id, email: user.email, token });
 };
-const login = async (req, res, next) => {};
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  let regex = /\S+@\S+\.\S+/;
+  if (regex.test(email) === false || email === "") {
+    const error = new HttpError("Invalid email!", 400);
+    return next(error);
+  }
+
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email: email });
+  } catch (err) {
+    const error = new HttpError(
+      "Signing in failed, please try again later.",
+      500
+    );
+    return next(error);
+  }
+  if (!existingUser) {
+    const error = new HttpError("Invalid credentials, could not log in!", 401);
+    return next(error);
+  }
+
+  let validPassword = false;
+  try {
+    validPassword = await bcrypt.compare(password, existingUser.password);
+  } catch (err) {
+    const error = new HttpError(
+      "Could not log in, please check credentials and try again!"
+    );
+    return next(error);
+  }
+
+  if (!validPassword) {
+    const error = new HttpError("Invalid password!", 401);
+    return next(error);
+  }
+
+  let token; //maybe export creating the token
+  try {
+    token = await jwt.sign(
+      {
+        userId: existingUser.id,
+        email: existingUser.email,
+        username: existingUser.username,
+      },
+      "I_like_peanut_butter_banana_protein_shakes",
+      { expiresIn: "1h" }
+    );
+  } catch (err) {
+    const error = new HttpError("Logging in failed, please try again!");
+    return next(error);
+  }
+
+  res
+    .status(201)
+    .json({ userId: existingUser.id, email: existingUser.email, token });
+};
 
 exports.authControllers = {
   register,
