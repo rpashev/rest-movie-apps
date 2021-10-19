@@ -9,7 +9,7 @@ const reviewSchema = new Schema(
     content: { type: String, required: true }, //needs max length
     date: { type: Date, default: new Date() },
     creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    movieId: { type: String, required: true },  //probably better as a string so I can directly use the IMDB ID which is unique anyway
+    movieId: { type: Schema.Types.ObjectId, ref: "Movie", required: true },  
   },
   { timestamps: true }
 );

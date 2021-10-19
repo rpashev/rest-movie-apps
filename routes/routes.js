@@ -1,10 +1,8 @@
 
 
-// "movies/ GET"- movies people watch - shared
+// "movies/ GET"- movies people watch - shared - 
 // "movies/:movieId GET" - shared
-// "auth/login GET" - guest
 // "auth/login POST" - guest
-// "auth/register GET" - guest
 // "auth/register POST" - guest
 // "user/:userId/watchlist GET" - user
 // "user/:userId/watchlist POST" - user adds to watchlist 
