@@ -1,6 +1,7 @@
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const register = async (req, res, next) => {
   const { username, email, password, repeatPassword } = req.body;
@@ -68,7 +69,6 @@ const register = async (req, res, next) => {
 
   try {
     await user.save();
-    res.send("Success");
   } catch (err) {
     const error = new HttpError(
       "Could not register, please try again later!",
@@ -76,6 +76,24 @@ const register = async (req, res, next) => {
     );
     return next(error);
   }
+  // creating jwt token
+  let token;
+  try {
+    token = await jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        username: user.username,
+      },
+      "I_like_peanut_butter_banana_protein_shakes",
+      { expiresIn: "1h" }
+    );
+  } catch (err) {
+    const error = new HttpError("Signing up failed, please try again!");
+    return next(error);
+  }
+
+  res.status(201).json({ userId: user.id, email: user.email, token });
 };
 const login = async (req, res, next) => {};
 
