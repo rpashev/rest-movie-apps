@@ -9,8 +9,8 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, minLenght: 6 },
     image: { type: String, default: "" },
-    watchlist: [{ type: Schema.Types.ObjectId, ref: "Movie", default: [] }],
-    seenlist: [{ type: Schema.Types.ObjectId, ref: "Movie", default: [] }],
+    watchlist: [{ type: String, default: [] }], //for now it looks better like that as OMDB API will be called directly from React.
+    seenlist: [{ type: String, default: [] }],
     reviews: [{ type: Schema.Types.ObjectId, ref: "Review", default: [] }],
   },
   { timestamps: true }
