@@ -1,6 +1,6 @@
 const axios = require("axios");
-const HttpError = require("../models/http-error");
-const Movie = require("../models/movie");
+const HttpError = require("../../models/http-error");
+const Movie = require("../../models/movie");
 
 const addMovieToPublic = async (req, res, next) => {
   const { title, poster, IMDBRating, IMDBId } = req.body;
@@ -44,6 +44,31 @@ const addMovieToPublic = async (req, res, next) => {
   res.json({ createdMovie });
 };
 
-exports.userControllers = {
+const addToWatchlist = async (req, res, next) => {
+
+}
+const getWatchlist = async (req, res, next) => {
+  
+}
+const removeFromWatchlist = async (req, res, next) => {
+  
+}
+const addToSeenList = async (req, res, next) => {
+  
+}
+const getSeenlist = async (req, res, next) => {
+  
+}
+const removeFromSeenList = async (req, res, next) => {
+  
+}
+
+exports.listControllers = {
   addMovieToPublic,
+  addToWatchlist,
+  getWatchlist,
+  removeFromWatchlist,
+  addToSeenList,
+  getSeenlist,
+  removeFromSeenList
 };
