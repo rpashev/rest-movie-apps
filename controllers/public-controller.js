@@ -1,5 +1,6 @@
 const axios = require("axios");
 const HttpError = require("../models/http-error");
+const Movie = require("../models/movie");
 
 const apiKey = "6b7999b9";
 
@@ -27,7 +28,18 @@ const getMovie = async (req, res, next) => {
 
   res.json({ movie });
 };
+const getPublicList = async (req, res, next) => {
+  let publicList;
+  try {
+    publicList = await Movie.find({});
+  } catch (err) {
+    const error = new HttpError("Could not get public list!", 500);
+    return next(error);
+  }
+  res.json(publicList);
+};
 
 exports.publicControllers = {
   getMovie,
+  getPublicList,
 };
