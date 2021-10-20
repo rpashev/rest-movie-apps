@@ -4,8 +4,9 @@ const cors = require("cors");
 
 const moviesRoutes = require("./routes/movies-routes");
 const authRoutes = require("./routes/auth-routes");
+const publicRoutes = require("./routes/public-routes");
 const HttpError = require("./models/http-error");
-const checkAuth = require("./middleware/checkAuth")
+const checkAuth = require("./middleware/checkAuth");
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(
 );
 
 app.use("/auth/", authRoutes);
+app.use(publicRoutes);
 
 app.use(checkAuth);
 app.use("/movies/", moviesRoutes);
