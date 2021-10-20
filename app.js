@@ -2,9 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const moviesRoutes = require("./routes/movies-routes");
 const authRoutes = require("./routes/auth-routes");
 const publicRoutes = require("./routes/public-routes");
+const userRoutes = require("./routes/user-routes");
 const HttpError = require("./models/http-error");
 const checkAuth = require("./middleware/checkAuth");
 
@@ -24,7 +24,7 @@ app.use("/auth/", authRoutes);
 app.use(publicRoutes);
 
 app.use(checkAuth);
-app.use("/movies/", moviesRoutes);
+app.use(userRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route!", 404);
