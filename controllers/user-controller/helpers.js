@@ -1,8 +1,36 @@
+const axios = require("axios");
 const HttpError = require("../../models/http-error");
 const Movie = require("../../models/movie");
 
+const apiKey = "6b7999b9";
+
 const queryPublicList = async (data) => {
-  const { title, poster, IMDBRating, IMDBId } = data;
+  const { IMDBId } = data;
+  let title, poster, IMDBRating;
+
+  let isValidId;
+  try {
+    const response = await axios.get(
+      `http://www.omdbapi.com/?apikey=${apiKey}&i=${IMDBId}`
+    );
+    isValidId = response.data.Response;
+
+    if (isValidId == "False") {
+      const error = new HttpError(
+        "Can't find a movie for the provided ID!",
+        404
+      );
+      return error;
+    }
+    title = response.data.Title;
+    poster = response.data.Poster;
+    IMDBRating = response.data.imdbRating;
+    
+  } catch (err) {
+    const error = new HttpError("Could not add movie, please try again!", 500);
+    return error;
+  }
+
   let existingMovie;
   try {
     existingMovie = await Movie.findOne({ IMDBId: IMDBId });
@@ -14,7 +42,7 @@ const queryPublicList = async (data) => {
     return error;
   }
   if (existingMovie) {
-    return existingMovie;
+    return existingMovie.id;
   }
 
   if (!title) {
@@ -41,7 +69,7 @@ const queryPublicList = async (data) => {
     );
     return error;
   }
-  return createdMovie;
+  return createdMovie.id;
 };
 
 exports.queryPublicList = queryPublicList;
