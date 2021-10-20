@@ -3,7 +3,8 @@ const User = require("../../models/user");
 
 const { queryPublicList } = require("./helpers");
 
-const addToWatchlist = async (req, res, next) => {
+const addToUserList = async (req, res, next, userList) => {
+  
   let result;
   let movieObjectId;
   let userId = req.userData.userId;
@@ -16,39 +17,37 @@ const addToWatchlist = async (req, res, next) => {
       movieObjectId = result;
     }
   } catch (err) {
-    const error = new HttpError("Could not add movie to watchlist!", 500);
+    const error = new HttpError(`Could not add movie to ${userList}!`, 500);
     return next(error);
   }
 
   try {
     user = await User.findById(userId, "-password");
-    if (user.watchlist.includes(movieObjectId)) {
-      const error = new HttpError("Movie is already in the watchlist!", 400);
+
+    if (user[userList].includes(movieObjectId)) {
+      const error = new HttpError(`Movie is already in the ${userList}!`, 400);
       return next(error);
     }
-    user.watchlist.push(movieObjectId);
+    user[userList].push(movieObjectId);
+    
     await user.save();
   } catch (err) {
     const error = new HttpError(
-      "Could not add movie to watchlist, try again!",
+      `Could not add movie to ${userList}, try again!`,
       500
     );
     return next(error);
   }
 
-  res.status(201).json({watchlist: user.watchlist});
+  res.status(201).json({[userList]: user[userList]});
 };
-const getWatchlist = async (req, res, next) => {};
-const removeFromWatchlist = async (req, res, next) => {};
-const addToSeenList = async (req, res, next) => {};
-const getSeenlist = async (req, res, next) => {};
-const removeFromSeenList = async (req, res, next) => {};
+const getUserList = async (req, res, next) => {};
+const removeFromUserlist = async (req, res, next) => {};
+
 
 exports.listControllers = {
-  addToWatchlist,
-  getWatchlist,
-  removeFromWatchlist,
-  addToSeenList,
-  getSeenlist,
-  removeFromSeenList,
+  addToUserList,
+  getUserList,
+  removeFromUserlist
+  
 };
