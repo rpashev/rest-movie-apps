@@ -47,7 +47,7 @@ const getUserList = async (req, res, next, userList) => {
   let list;
 
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate(userList);
     if (!user) {
       const error = new HttpError(
         "Could not retrieve list, invalid user!",
@@ -79,8 +79,10 @@ const removeFromUserlist = async (req, res, next, userList) => {
       return next(error);
     }
 
-    const movieIndex = user[userList].findIndex((id) => id.toString() === movieId);
-    
+    const movieIndex = user[userList].findIndex(
+      (id) => id.toString() === movieId
+    );
+
     if (movieIndex < 0) {
       const error = new HttpError(
         `Could not remove from ${userList}, no movie in the list with such ID!`,
@@ -91,7 +93,6 @@ const removeFromUserlist = async (req, res, next, userList) => {
 
     user[userList].splice(movieIndex, 1);
     await user.save();
-
   } catch (err) {
     const error = new HttpError(
       `Could not remove from ${userList}, please try again!`,
@@ -99,7 +100,7 @@ const removeFromUserlist = async (req, res, next, userList) => {
     );
     return next(error);
   }
-  res.json("deleted")
+  res.json("deleted");
 };
 
 exports.listControllers = {

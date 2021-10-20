@@ -1,6 +1,7 @@
 const axios = require("axios");
 const HttpError = require("../../models/http-error");
 const Movie = require("../../models/movie");
+const User = require("../../models/user");
 
 const apiKey = "6b7999b9";
 
@@ -25,7 +26,6 @@ const queryPublicList = async (data) => {
     title = response.data.Title;
     poster = response.data.Poster;
     IMDBRating = response.data.imdbRating;
-    
   } catch (err) {
     const error = new HttpError("Could not add movie, please try again!", 500);
     return error;
@@ -72,4 +72,25 @@ const queryPublicList = async (data) => {
   return createdMovie.id;
 };
 
+const checkIfInUserList = async (userId, movieId, userList) => {
+  let user;
+  try {
+    user = await User.findById(userId).populate(userList);
+  } catch (err) {
+    const error = new HttpError("Something went wrong, invalid user id", 500);
+    return next(error);
+  }
+  if (!user) {
+    return next(new HttpError("No such user", 401));
+  }
+
+  const movie = user[userList].find((mov) => mov.IMDBId === movieId);
+  if (movie) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 exports.queryPublicList = queryPublicList;
+exports.checkIfInUserList = checkIfInUserList;

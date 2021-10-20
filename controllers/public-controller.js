@@ -2,12 +2,21 @@ const axios = require("axios");
 const HttpError = require("../models/http-error");
 const Movie = require("../models/movie");
 
+const { checkIfInUserList } = require("./user-controller/helpers");
 const apiKey = "6b7999b9";
 
 const getMovie = async (req, res, next) => {
   let movie;
+  // to check if in user lists/user left a review
+  const userId = req.userData.userId;
+  console.log(userId)
 
   const movieId = req.params.movieId;
+
+  if (userId) {
+    console.log(await checkIfInUserList(userId, movieId, "seenlist"));
+  }
+
   try {
     const response = await axios.get(
       `http://www.omdbapi.com/?apikey=${apiKey}&i=${movieId}`
@@ -25,7 +34,10 @@ const getMovie = async (req, res, next) => {
     const error = new HttpError("Could not load movie, please try again!", 500);
     return next(error);
   }
-
+  //return reviews with movie
+  //check if logged in
+  //check if movie is in lists
+  //check if user left a review
   res.json({ movie });
 };
 const getPublicList = async (req, res, next) => {
