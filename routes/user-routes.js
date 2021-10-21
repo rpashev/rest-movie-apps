@@ -1,6 +1,8 @@
 const express = require("express");
 
 const { listControllers } = require("../controllers/user-controller/list-controller");
+const { reviewControllers } = require("../controllers/user-controller/review-controller");
+
 const router = express.Router();
 
 //user lists
@@ -14,5 +16,6 @@ router.get("/user/seenlist", (req, res, next) => listControllers.getUserList(req
 router.delete("/user/seenlist/:movieId", (req, res, next) => listControllers.removeFromUserlist(req, res, next, "seenlist"));
 
 //reviews
+router.post("/movies/:movieId/review", reviewControllers.addReview)
 
 module.exports = router;

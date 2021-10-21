@@ -5,11 +5,32 @@ const User = require("../../models/user");
 
 const apiKey = "6b7999b9";
 
-const queryPublicList = async (data) => {
-  const { IMDBId } = data;
-  let title, poster, IMDBRating;
+const queryPublicList = async (data, createMovie) => {
+  const IMDBId = data;
 
+  let existingMovie;
+  try {
+    existingMovie = await Movie.findOne({ IMDBId: IMDBId });
+  } catch (err) {
+    const error = new HttpError(
+      "Could not add/get movie, something went wrong!",
+      500
+    );
+    return error;
+  }
+  if (existingMovie) {
+    return existingMovie.id;
+  }
+
+  // to stop creating a movie in public list if called from add review - movie should already be in public list as it's in user's seen list
+  if (!existingMovie && createMovie === false) {
+    const error = new HttpError("Movie is not in the public list!", 500);
+    return error;
+  }
+
+  let title, poster, IMDBRating;
   let isValidId;
+
   try {
     const response = await axios.get(
       `http://www.omdbapi.com/?apikey=${apiKey}&i=${IMDBId}`
@@ -31,20 +52,6 @@ const queryPublicList = async (data) => {
     return error;
   }
 
-  let existingMovie;
-  try {
-    existingMovie = await Movie.findOne({ IMDBId: IMDBId });
-  } catch (err) {
-    const error = new HttpError(
-      "Could not add/get movie, something went wrong!",
-      500
-    );
-    return error;
-  }
-  if (existingMovie) {
-    return existingMovie.id;
-  }
-
   if (!title) {
     const error = new HttpError("Title is missing, could not add movie!", 500);
     return error;
@@ -60,6 +67,7 @@ const queryPublicList = async (data) => {
     IMDBId,
     IMDBRating: +IMDBRating,
   });
+
   try {
     await createdMovie.save();
   } catch (err) {

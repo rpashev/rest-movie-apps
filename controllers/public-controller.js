@@ -37,7 +37,7 @@ const getMovie = async (req, res, next) => {
   //return reviews with movie
   //check if logged in
   //check if movie is in lists
-  //check if user left a review
+ 
   res.json({ movie });
 };
 const getPublicList = async (req, res, next) => {

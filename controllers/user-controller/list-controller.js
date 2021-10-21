@@ -8,9 +8,12 @@ const addToUserList = async (req, res, next, userList) => {
   let movieObjectId;
   let userId = req.userData.userId;
   let user;
-
+  if (!req.body.IMDBId) {
+    const error = new HttpError("No movie ID is provided!", 400);
+    return next(error);
+  }
   try {
-    result = await queryPublicList(req.body);
+    result = await queryPublicList(req.body.IMDBId, true);
     if (result.code) {
       return next(result);
     } else {
