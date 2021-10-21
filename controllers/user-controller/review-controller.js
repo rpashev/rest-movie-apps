@@ -17,6 +17,7 @@ const addReview = async (req, res, next) => {
   try {
     const result = await queryPublicList(movieId, false);
     if (result.code) {
+      //checking if there is an error
       return next(result);
     }
     movieObjectId = result;
@@ -42,7 +43,7 @@ const addReview = async (req, res, next) => {
     }
 
     let existingReviewIndex = user.reviews.findIndex(
-      (review) => review.movieId.toString() === movieObjectId.toString()
+      (review) => review.movie.toString() === movieObjectId.toString()
     );
     if (existingReviewIndex >= 0) {
       const error = new HttpError(
@@ -78,14 +79,18 @@ const addReview = async (req, res, next) => {
     const error = new HttpError("Rating and content are requred!", 400);
     return next(error);
   }
+  if (+rating < 1 || +rating > 10) {
+    const error = new HttpError("Rating must be between 1 and 10!", 400);
+    return next(error);
+  }
 
   const createdReview = new Review({
     rating: +rating,
     title,
     content,
     creator: userId,
-    movieId: movieObjectId,
-    IMDBId: movieId
+    movie: movieObjectId,
+    IMDBId: movieId,
   });
 
   try {
@@ -106,7 +111,26 @@ const editReview = async (req, res, next) => {};
 
 const deleteReview = async (req, res, next) => {};
 
-const getAllUserReviews = async (req, res, next) => {};
+const getAllUserReviews = async (req, res, next) => {
+  const userId = req.userData.userId;
+  let user;
+  let reviews;
+  try {
+    user = await User.findById(userId).populate({
+      path: "reviews",
+      populate: { path: "movie" },
+    });
+    if (!user) {
+      const error = new HttpError("Invalid user!", 401);
+      return next(error);
+    }
+    reviews = user.reviews;
+  } catch (err) {
+    const error = new HttpError("Could not retrieve user reviews!", 500);
+    return next(error);
+  }
+  res.json(reviews);
+};
 
 exports.reviewControllers = {
   addReview,
