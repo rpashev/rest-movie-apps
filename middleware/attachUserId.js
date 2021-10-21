@@ -3,8 +3,9 @@ const HttpError = require("../models/http-error");
 
 module.exports = (req, res, next) => {
   try {
-    if (req.headers.authorization === undefined) {
+    if (!req.headers.authorization) {
       req.userData = { userId: null };
+
       return next();
     }
 
@@ -14,12 +15,15 @@ module.exports = (req, res, next) => {
       req.userData = { userId: null };
       return next();
     }
+    console.log("here");
+
     const decodedToken = jwt.verify(
       token,
       "I_like_peanut_butter_banana_protein_shakes"
     );
 
     req.userData = { userId: decodedToken.userId };
+
     next();
   } catch (err) {
     const error = new HttpError("Something went wrong!!", 500);

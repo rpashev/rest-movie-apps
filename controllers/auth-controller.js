@@ -86,7 +86,7 @@ const register = async (req, res, next) => {
         username: user.username,
       },
       "I_like_peanut_butter_banana_protein_shakes",
-      { expiresIn: "1h" }
+      { expiresIn: "10h" }
     );
   } catch (err) {
     const error = new HttpError("Signing up failed, please try again!");
@@ -143,7 +143,7 @@ const login = async (req, res, next) => {
         username: existingUser.username,
       },
       "I_like_peanut_butter_banana_protein_shakes",
-      { expiresIn: "1h" }
+      { expiresIn: "10h" }
     );
   } catch (err) {
     const error = new HttpError("Logging in failed, please try again!");

@@ -1,6 +1,7 @@
 const axios = require("axios");
 const HttpError = require("../models/http-error");
 const Movie = require("../models/movie");
+const Review = require("../models/review");
 
 const { checkIfInUserList } = require("./user-controller/helpers");
 const apiKey = "6b7999b9";
@@ -9,13 +10,9 @@ const getMovie = async (req, res, next) => {
   let movie;
   // to check if in user lists/user left a review
   const userId = req.userData.userId;
-  console.log(userId)
+  console.log(userId);
 
   const movieId = req.params.movieId;
-
-  if (userId) {
-    console.log(await checkIfInUserList(userId, movieId, "seenlist"));
-  }
 
   try {
     const response = await axios.get(
@@ -35,9 +32,43 @@ const getMovie = async (req, res, next) => {
     return next(error);
   }
   //return reviews with movie
+  let reviews;
+  try {
+    reviews = await Review.find({ IMDBId: movieId }).populate(
+      "creator",
+      "username"
+    );
+  } catch (err) {
+    const error = new HttpError(
+      "Could not load movie, something went wrong!",
+      500
+    );
+    return next(error);
+  }
+  movie.reviews = reviews;
+
+  if (userId !== null) {
+    try {
+      const [isInWatchlist, isInSeenList] = await Promise.all([
+        checkIfInUserList(userId, movieId, "watchlist"),
+        checkIfInUserList(userId, movieId, "seenlist"),
+      ]);
+
+      movie.isInWatchlist = isInWatchlist;
+      movie.isInSeenList = isInSeenList;
+    } catch (err) {
+      const error = new HttpError(
+        "Could not load movie, something went horribly wrong!",
+        500
+      );
+      return next(error);
+    }
+  }
+  // reviews = await Review.find({})
+
   //check if logged in
   //check if movie is in lists
- 
+
   res.json({ movie });
 };
 const getPublicList = async (req, res, next) => {

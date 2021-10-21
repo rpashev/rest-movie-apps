@@ -73,7 +73,8 @@ const removeFromUserlist = async (req, res, next, userList) => {
   const movieId = req.params.movieId;
 
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate([userList]);
+
     if (!user) {
       const error = new HttpError(
         `Could not remove from ${userList}, invalid user!`,
@@ -83,7 +84,7 @@ const removeFromUserlist = async (req, res, next, userList) => {
     }
 
     const movieIndex = user[userList].findIndex(
-      (id) => id.toString() === movieId
+      (movie) => movie.IMDBId === movieId
     );
 
     if (movieIndex < 0) {

@@ -9,7 +9,8 @@ const reviewSchema = new Schema(
     content: { type: String, required: true }, //needs max length
     date: { type: Date, default: new Date() },
     creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    movieId: { type: Schema.Types.ObjectId, ref: "Movie", required: true },  
+    movieId: { type: Schema.Types.ObjectId, ref: "Movie", required: true }, 
+    IMDBId: {type: String, required: true} 
   },
   { timestamps: true }
 );

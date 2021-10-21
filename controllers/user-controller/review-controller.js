@@ -85,6 +85,7 @@ const addReview = async (req, res, next) => {
     content,
     creator: userId,
     movieId: movieObjectId,
+    IMDBId: movieId
   });
 
   try {
@@ -92,7 +93,7 @@ const addReview = async (req, res, next) => {
     const movie = await Movie.findById(movieObjectId);
     movie.reviews.unshift(createdReview.id);
     user.reviews.unshift(createdReview.id);
-    Promise.all([await movie.save(), await user.save()]);
+    await Promise.all([movie.save(), user.save()]);
   } catch (err) {
     const error = new HttpError("Could not save review!", 500);
     return next(error);
