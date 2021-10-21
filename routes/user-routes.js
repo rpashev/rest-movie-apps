@@ -17,6 +17,7 @@ router.delete("/user/seenlist/:movieId", (req, res, next) => listControllers.rem
 
 //reviews
 router.post("/movies/:movieId/review", reviewControllers.addReview);
+router.delete("/movies/:movieId/review/:reviewId", reviewControllers.deleteReview);
 router.get("/user/reviews", reviewControllers.getAllUserReviews);
 
 module.exports = router;

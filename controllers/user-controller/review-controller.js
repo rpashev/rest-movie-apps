@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const HttpError = require("../../models/http-error");
 const User = require("../../models/user");
 const Review = require("../../models/review");
@@ -8,7 +9,7 @@ const { queryPublicList } = require("./helpers");
 
 const addReview = async (req, res, next) => {
   const userId = req.userData.userId;
-  const movieId = req.params.movieId;
+  const movieId = req.params.movieId; //IMDB ID
   const { rating, title, content } = req.body;
   let user;
 
@@ -107,9 +108,61 @@ const addReview = async (req, res, next) => {
   res.json(createdReview);
 };
 
-const editReview = async (req, res, next) => {};
+const editReview = async (req, res, next) => {}; //not sure if necessary
 
-const deleteReview = async (req, res, next) => {};
+const deleteReview = async (req, res, next) => {
+  const reviewId = req.params.reviewId;
+  const userId = req.userData.userId;
+  try {
+  } catch (err) {
+    console.log(err);
+  }
+  let user;
+
+  if (
+    !mongoose.Types.ObjectId.isValid(userId) ||
+    !mongoose.Types.ObjectId.isValid(reviewId)
+  ) {
+    const error = new HttpError(
+      "Invalid credentials or review ID! Could not delete!",
+      400
+    );
+    return next(error);
+  }
+  let review;
+
+  try {
+    review = await Review.findById(reviewId).populate("movie");
+    if (!review) {
+      const error = new HttpError("Could not find a review for this ID", 404);
+      return next(error);
+    }
+
+    if (review.creator.toString() !== userId) {
+      const error = new HttpError("Not authorzied to delete!", 401);
+      return next(error);
+    }
+  } catch (err) {
+    const error = new HttpError("Could not delete, try again!", 500);
+    return next(error);
+  }
+
+  try {
+    //with transactions maybe?
+    user = await User.findById(userId);
+    user.reviews.pull(reviewId);
+    review.movie.reviews.pull(reviewId);
+
+    await Promise.all([review.remove(), review.movie.save(), user.save()]);
+  } catch (err) {
+    const error = new HttpError(
+      "Could not delete review, something went wrong!",
+      500
+    );
+    return next(error);
+  }
+  res.json("deleted");
+};
 
 const getAllUserReviews = async (req, res, next) => {
   const userId = req.userData.userId;
