@@ -1,7 +1,7 @@
-const HttpError = require("../../models/http-error");
-const User = require("../../models/user");
+import HttpError from "../../models/http-error.js";
+import User from "../../models/user.js";
 
-const { queryPublicList } = require("./helpers");
+import helpers from "./helpers.js";
 
 const addToUserList = async (req, res, next, userList) => {
   let result;
@@ -13,7 +13,7 @@ const addToUserList = async (req, res, next, userList) => {
     return next(error);
   }
   try {
-    result = await queryPublicList(req.body.IMDBId, true);
+    result = await helpers.queryPublicList(req.body.IMDBId, true);
     if (result.code) {
       return next(result);
     } else {
@@ -107,7 +107,12 @@ const removeFromUserlist = async (req, res, next, userList) => {
   res.json("deleted");
 };
 
-exports.listControllers = {
+// exports.listControllers = {
+//   addToUserList,
+//   getUserList,
+//   removeFromUserlist,
+// };
+export default {
   addToUserList,
   getUserList,
   removeFromUserlist,

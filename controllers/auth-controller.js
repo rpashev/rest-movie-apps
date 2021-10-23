@@ -1,7 +1,7 @@
-const HttpError = require("../models/http-error");
-const User = require("../models/user");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import HttpError from "../models/http-error.js";
+import User from "../models/user.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const register = async (req, res, next) => {
   const { username, email, password, repeatPassword } = req.body;
@@ -155,7 +155,8 @@ const login = async (req, res, next) => {
     .json({ userId: existingUser.id, email: existingUser.email, token });
 };
 
-exports.authControllers = {
-  register,
-  login,
-};
+// exports.authControllers = {
+//   register,
+//   login,
+// };
+export default { register, login };

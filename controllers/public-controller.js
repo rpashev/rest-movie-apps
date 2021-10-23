@@ -1,9 +1,9 @@
-const axios = require("axios");
-const HttpError = require("../models/http-error");
-const Movie = require("../models/movie");
-const Review = require("../models/review");
+import axios from "axios";
+import HttpError from "../models/http-error.js";
+import Movie from "../models/movie.js";
+import Review from "../models/review.js";
 
-const { checkIfInUserList } = require("./user-controller/helpers");
+import helpers from "./user-controller/helpers.js";
 const apiKey = "6b7999b9";
 
 const getMovie = async (req, res, next) => {
@@ -50,8 +50,8 @@ const getMovie = async (req, res, next) => {
   if (userId !== null) {
     try {
       const [isInWatchlist, isInSeenList] = await Promise.all([
-        checkIfInUserList(userId, movieId, "watchlist"),
-        checkIfInUserList(userId, movieId, "seenlist"),
+        helpers.checkIfInUserList(userId, movieId, "watchlist"),
+        helpers.checkIfInUserList(userId, movieId, "seenlist"),
       ]);
 
       movie.isInWatchlist = isInWatchlist;
@@ -82,7 +82,8 @@ const getPublicList = async (req, res, next) => {
   res.json(publicList);
 };
 
-exports.publicControllers = {
-  getMovie,
-  getPublicList,
-};
+// exports.publicControllers = {
+//   getMovie,
+//   getPublicList,
+// };
+export default { getMovie, getPublicList };

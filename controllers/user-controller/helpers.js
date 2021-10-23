@@ -1,7 +1,7 @@
-const axios = require("axios");
-const HttpError = require("../../models/http-error");
-const Movie = require("../../models/movie");
-const User = require("../../models/user");
+import axios from "axios";
+import HttpError from "../../models/http-error.js";
+import Movie from "../../models/movie.js";
+import User from "../../models/user.js";
 
 const apiKey = "6b7999b9";
 
@@ -100,5 +100,6 @@ const checkIfInUserList = async (userId, movieId, userList) => {
   }
 };
 
-exports.queryPublicList = queryPublicList;
-exports.checkIfInUserList = checkIfInUserList;
+// exports.queryPublicList = queryPublicList;
+// exports.checkIfInUserList = checkIfInUserList;
+export default { queryPublicList, checkIfInUserList };

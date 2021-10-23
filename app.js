@@ -1,12 +1,11 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-
-const authRoutes = require("./routes/auth-routes");
-const publicRoutes = require("./routes/public-routes");
-const userRoutes = require("./routes/user-routes");
-const HttpError = require("./models/http-error");
-const checkAuth = require("./middleware/checkAuth");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import authRoutes from "./routes/auth-routes.js";
+import publicRoutes from "./routes/public-routes.js";
+import userRoutes from "./routes/user-routes.js";
+import HttpError from "./models/http-error.js";
+import checkAuth from "./middleware/checkAuth.js";
 
 const app = express();
 

@@ -1,10 +1,11 @@
-const express = require("express");
+import express from "express";
+import publicControllers from "../controllers/public-controller.js";
+import attachUserId from "../middleware/attachUserId.js";
 
-const { publicControllers } = require("../controllers/public-controller");
-const attachUserId = require("../middleware/attachUserId");
 const router = express.Router();
 
 router.get("/movies/:movieId", attachUserId, publicControllers.getMovie); //testing
 router.get("/public-library", publicControllers.getPublicList);
 
-module.exports = router;
+// module.exports = router;
+export default router;

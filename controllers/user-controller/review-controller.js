@@ -1,11 +1,10 @@
-const mongoose = require("mongoose");
-const HttpError = require("../../models/http-error");
-const User = require("../../models/user");
-const Review = require("../../models/review");
-const Movie = require("../../models/movie");
+import mongoose from "mongoose";
+import HttpError from "../../models/http-error.js";
+import Movie from "../../models/movie.js";
+import User from "../../models/user.js";
+import Review from "../../models/review.js";
 
-const { checkIfInUserList } = require("./helpers");
-const { queryPublicList } = require("./helpers");
+import helpers from "./helpers.js";
 
 const addReview = async (req, res, next) => {
   const userId = req.userData.userId;
@@ -16,7 +15,7 @@ const addReview = async (req, res, next) => {
   // checking and getting the movie Object Id
   let movieObjectId;
   try {
-    const result = await queryPublicList(movieId, false);
+    const result = await helpers.queryPublicList(movieId, false);
     if (result.code) {
       //checking if there is an error
       return next(result);
@@ -60,7 +59,11 @@ const addReview = async (req, res, next) => {
 
   //check if movie is in seen list, if in watchlist - can't leave a review
   try {
-    const isInSeenlist = await checkIfInUserList(userId, movieId, "seenlist");
+    const isInSeenlist = await helpers.checkIfInUserList(
+      userId,
+      movieId,
+      "seenlist"
+    );
     if (!isInSeenlist) {
       const error = new HttpError(
         "Can't add a review if movie is not in seen list!",
@@ -185,7 +188,13 @@ const getAllUserReviews = async (req, res, next) => {
   res.json(reviews);
 };
 
-exports.reviewControllers = {
+// exports.reviewControllers = {
+//   addReview,
+//   editReview,
+//   deleteReview,
+//   getAllUserReviews,
+// };
+export default {
   addReview,
   editReview,
   deleteReview,

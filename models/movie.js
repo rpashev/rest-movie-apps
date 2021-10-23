@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
@@ -13,4 +13,5 @@ const movieSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Movie", movieSchema);
+// module.exports = mongoose.model("Movie", movieSchema);
+export default mongoose.model("Movie", movieSchema);
