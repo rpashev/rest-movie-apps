@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:8080",
+    origin: "http://localhost:3000",
   })
 );
 
@@ -40,7 +40,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://rosko_kz:Rossen91kz@cluster0.cpss2.mongodb.net/movie-app?retryWrites=true&w=majority"
+    "mongodb://rosko_kz:Rossen91kz@cluster0-shard-00-00.cpss2.mongodb.net:27017,cluster0-shard-00-01.cpss2.mongodb.net:27017,cluster0-shard-00-02.cpss2.mongodb.net:27017/movie-app?ssl=true&replicaSet=atlas-dg8hi2-shard-0&authSource=admin&retryWrites=true&w=majority"
   )
   .then(() => app.listen(5000, console.log("listening on port 5000....")))
   .catch((err) => console.log(err));

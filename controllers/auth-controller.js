@@ -4,7 +4,12 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const register = async (req, res, next) => {
-  const { username, email, password, repeatPassword } = req.body;
+  // const { username, email, password, repeatPassword } = req.body;
+  const username = req.body.username.trim();
+  const email = req.body.email.trim();
+  const password = req.body.password.trim();
+  const repeatPassword = req.body.repeatPassword.trim();
+
 
   if (!username) {
     const error = new HttpError("Username is required!", 400);
@@ -96,7 +101,9 @@ const register = async (req, res, next) => {
   res.status(201).json({ userId: user.id, email: user.email, token });
 };
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
+  // const { email, password } = req.body;
+  const email = req.body.email.trim();
+  const password = req.body.password.trim();
 
   let regex = /\S+@\S+\.\S+/;
   if (regex.test(email) === false || email === "") {

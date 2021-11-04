@@ -9,7 +9,10 @@ import helpers from "./helpers.js";
 const addReview = async (req, res, next) => {
   const userId = req.userData.userId;
   const movieId = req.params.movieId; //IMDB ID
-  const { rating, title, content } = req.body;
+  // const { rating, title, content } = req.body;
+  const rating = req.body.rating.trim();
+  const title = req.body.title.trim();
+  const content = req.body.content.trim();
   let user;
 
   // checking and getting the movie Object Id
