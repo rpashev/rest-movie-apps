@@ -10,7 +10,6 @@ const register = async (req, res, next) => {
   const password = req.body.password.trim();
   const repeatPassword = req.body.repeatPassword.trim();
 
-
   if (!username) {
     const error = new HttpError("Username is required!", 400);
     return next(error);
@@ -98,7 +97,12 @@ const register = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ userId: user.id, email: user.email, token });
+  res.status(201).json({
+    token,
+    username: user.username,
+    userId: user.id,
+    email: user.email,
+  });
 };
 const login = async (req, res, next) => {
   // const { email, password } = req.body;
@@ -121,6 +125,7 @@ const login = async (req, res, next) => {
     );
     return next(error);
   }
+
   if (!existingUser) {
     const error = new HttpError("Invalid credentials, could not log in!", 401);
     return next(error);
@@ -157,9 +162,12 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res
-    .status(201)
-    .json({ userId: existingUser.id, email: existingUser.email, token });
+  res.status(201).json({
+    token,
+    username: existingUser.username,
+    userId: existingUser.id,
+    email: existingUser.email,
+  });
 };
 
 // exports.authControllers = {

@@ -28,7 +28,7 @@ const queryPublicList = async (data, createMovie) => {
     return error;
   }
 
-  let title, poster, IMDBRating;
+  let title, poster, IMDBRating, year, genre, runtime, actors, plot;
   let isValidId;
 
   try {
@@ -47,6 +47,11 @@ const queryPublicList = async (data, createMovie) => {
     title = response.data.Title;
     poster = response.data.Poster;
     IMDBRating = response.data.imdbRating;
+    year = response.data.Year;
+    genre = response.data.Genre;
+    runtime = response.data.Runtime;
+    actors = response.data.Actors;
+    plot = response.data.Plot;
   } catch (err) {
     const error = new HttpError("Could not add movie, please try again!", 500);
     return error;
@@ -66,11 +71,17 @@ const queryPublicList = async (data, createMovie) => {
     poster,
     IMDBId,
     IMDBRating: +IMDBRating,
+    year,
+    genre,
+    runtime,
+    actors,
+    plot,
   });
 
   try {
     await createdMovie.save();
   } catch (err) {
+    console.log(err)
     const error = new HttpError(
       "Could not create movie, internal server error!",
       500

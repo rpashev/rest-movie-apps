@@ -10,7 +10,7 @@ const getMovie = async (req, res, next) => {
   let movie;
   // to check if in user lists/user left a review
   const userId = req.userData.userId;
-  console.log(userId);
+  
 
   const movieId = req.params.movieId;
 
@@ -19,8 +19,10 @@ const getMovie = async (req, res, next) => {
       `http://www.omdbapi.com/?apikey=${apiKey}&i=${movieId}`
     );
     movie = response.data;
+    // console.log(movie)
 
     if (movie.Response == "False") {
+    
       const error = new HttpError(
         "Can't find a movie for the provided ID!",
         404
@@ -46,7 +48,7 @@ const getMovie = async (req, res, next) => {
     return next(error);
   }
   movie.reviews = reviews;
-
+// console.log(userId)
   if (userId !== null) {
     try {
       const [isInWatchlist, isInSeenList] = await Promise.all([
@@ -56,6 +58,7 @@ const getMovie = async (req, res, next) => {
 
       movie.isInWatchlist = isInWatchlist;
       movie.isInSeenList = isInSeenList;
+      // console.log("here")
     } catch (err) {
       const error = new HttpError(
         "Could not load movie, something went horribly wrong!",

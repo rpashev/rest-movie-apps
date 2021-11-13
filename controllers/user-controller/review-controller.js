@@ -120,9 +120,7 @@ const deleteReview = async (req, res, next) => {
   const reviewId = req.params.reviewId;
   const userId = req.userData.userId;
   try {
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (err) {}
   let user;
 
   if (

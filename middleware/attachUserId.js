@@ -15,7 +15,7 @@ export default (req, res, next) => {
       req.userData = { userId: null };
       return next();
     }
-    console.log("here");
+    
 
     const decodedToken = jwt.verify(
       token,

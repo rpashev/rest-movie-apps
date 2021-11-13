@@ -4,10 +4,12 @@ import User from "../../models/user.js";
 import helpers from "./helpers.js";
 
 const addToUserList = async (req, res, next, userList) => {
+  // console.log("here")
   let result;
   let movieObjectId;
   let userId = req.userData.userId;
   let user;
+  // console.log(req.body)
   if (!req.body.IMDBId) {
     const error = new HttpError("No movie ID is provided!", 400);
     return next(error);
