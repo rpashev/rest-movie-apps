@@ -10,7 +10,6 @@ const getMovie = async (req, res, next) => {
   let movie;
   // to check if in user lists/user left a review
   const userId = req.userData.userId;
-  
 
   const movieId = req.params.movieId;
 
@@ -22,7 +21,6 @@ const getMovie = async (req, res, next) => {
     // console.log(movie)
 
     if (movie.Response == "False") {
-    
       const error = new HttpError(
         "Can't find a movie for the provided ID!",
         404
@@ -48,7 +46,7 @@ const getMovie = async (req, res, next) => {
     return next(error);
   }
   movie.reviews = reviews;
-// console.log(userId)
+  // console.log(userId)
   if (userId !== null) {
     try {
       const [isInWatchlist, isInSeenList] = await Promise.all([
@@ -76,12 +74,36 @@ const getMovie = async (req, res, next) => {
 };
 const getPublicList = async (req, res, next) => {
   let publicList;
+  const userId = req.userData.userId;
+
   try {
     publicList = await Movie.find({});
   } catch (err) {
     const error = new HttpError("Could not get public list!", 500);
     return next(error);
   }
+
+  if (userId !== null) {
+    for (let movie of publicList) {
+      try {
+        let [isInWatchlist, isInSeenList] = await Promise.all([
+          helpers.checkIfInUserList(userId, movie.IMDBId, "watchlist"),
+          helpers.checkIfInUserList(userId, movie.IMDBId, "seenlist"),
+        ]);
+
+        movie = { ...movie, isInWatchlist, isInSeenList };
+        console.log(movie);
+      } catch (err) {
+        console.log(err);
+        const error = new HttpError(
+          "Could not load movies, something went horribly wrong!",
+          500
+        );
+        return next(error);
+      }
+    }
+  }
+  // console.log(publicList);
   res.json(publicList);
 };
 
