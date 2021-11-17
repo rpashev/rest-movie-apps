@@ -117,7 +117,9 @@ const login = async (req, res, next) => {
 
   let existingUser;
   try {
-    existingUser = await User.findOne({ email: email });
+    existingUser = await User.findOne({ email: email })
+      .populate("watchlist", "IMDBId")
+      .populate("seenlist", "IMDBId");
   } catch (err) {
     const error = new HttpError(
       "Signing in failed, please try again later.",
@@ -167,6 +169,8 @@ const login = async (req, res, next) => {
     username: existingUser.username,
     userId: existingUser.id,
     email: existingUser.email,
+    watchlist: existingUser.watchlist.map((movie) => movie.IMDBId),
+    seenlist: existingUser.seenlist.map((movie) => movie.IMDBId),
   });
 };
 

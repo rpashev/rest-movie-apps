@@ -74,7 +74,6 @@ const getMovie = async (req, res, next) => {
 };
 const getPublicList = async (req, res, next) => {
   let publicList;
-  const userId = req.userData.userId;
 
   try {
     publicList = await Movie.find({});
@@ -83,27 +82,6 @@ const getPublicList = async (req, res, next) => {
     return next(error);
   }
 
-  if (userId !== null) {
-    for (let movie of publicList) {
-      try {
-        let [isInWatchlist, isInSeenList] = await Promise.all([
-          helpers.checkIfInUserList(userId, movie.IMDBId, "watchlist"),
-          helpers.checkIfInUserList(userId, movie.IMDBId, "seenlist"),
-        ]);
-
-        movie = { ...movie, isInWatchlist, isInSeenList };
-        console.log(movie);
-      } catch (err) {
-        console.log(err);
-        const error = new HttpError(
-          "Could not load movies, something went horribly wrong!",
-          500
-        );
-        return next(error);
-      }
-    }
-  }
-  // console.log(publicList);
   res.json(publicList);
 };
 
