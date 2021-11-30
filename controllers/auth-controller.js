@@ -102,6 +102,8 @@ const register = async (req, res, next) => {
     username: user.username,
     userId: user.id,
     email: user.email,
+    watchlist: user.watchlist.map((movie) => movie.IMDBId),
+    seenlist: user.seenlist.map((movie) => movie.IMDBId),
   });
 };
 const login = async (req, res, next) => {
