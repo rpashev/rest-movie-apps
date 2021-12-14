@@ -104,6 +104,7 @@ const register = async (req, res, next) => {
     email: user.email,
     watchlist: user.watchlist.map((movie) => movie.IMDBId),
     seenlist: user.seenlist.map((movie) => movie.IMDBId),
+    image: user.image
   });
 };
 const login = async (req, res, next) => {
@@ -165,6 +166,7 @@ const login = async (req, res, next) => {
     const error = new HttpError("Logging in failed, please try again!");
     return next(error);
   }
+  
 
   res.status(201).json({
     token,
@@ -173,11 +175,36 @@ const login = async (req, res, next) => {
     email: existingUser.email,
     watchlist: existingUser.watchlist.map((movie) => movie.IMDBId),
     seenlist: existingUser.seenlist.map((movie) => movie.IMDBId),
+    image: existingUser.image
   });
 };
 
-// exports.authControllers = {
-//   register,
-//   login,
-// };
-export default { register, login };
+const update = async (req, res, next) => {
+  const userId = req.userData.userId;
+  const image = req.body.image;
+
+  let existingUser;
+  try {
+    existingUser = await User.findById(userId);
+  } catch (err) {
+    const error = new HttpError("Something went wrong!", 500);
+    return next(error);
+  }
+
+  if (!existingUser) {
+    const error = new HttpError("Invalid credentials, please log in!", 401);
+    return next(error);
+  }
+
+  existingUser.image = image;
+
+  try {
+    await existingUser.save();
+  } catch (err) {
+    const error = new HttpError("Could not update profile", 500);
+    return next(error);
+  }
+  res.json({ image: existingUser.image });
+};
+
+export default { register, login, update };

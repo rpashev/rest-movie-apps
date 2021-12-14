@@ -1,6 +1,7 @@
 import express from "express";
 import listControllers from "../controllers/user-controller/list-controller.js";
 import reviewControllers from "../controllers/user-controller/review-controller.js";
+import authControllers from "../controllers/auth-controller.js";
 
 const router = express.Router();
 
@@ -33,6 +34,10 @@ router.delete(
   reviewControllers.deleteReview
 );
 router.get("/user/reviews", reviewControllers.getAllUserReviews);
+
+//user update
+router.post("/user-profile", authControllers.update);
+
 
 // module.exports = router;
 export default router;
