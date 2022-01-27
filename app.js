@@ -6,6 +6,7 @@ import publicRoutes from "./routes/public-routes.js";
 import userRoutes from "./routes/user-routes.js";
 import HttpError from "./models/http-error.js";
 import checkAuth from "./middleware/checkAuth.js";
+import { request } from "express";
 
 const app = express();
 

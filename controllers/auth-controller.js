@@ -104,7 +104,7 @@ const register = async (req, res, next) => {
     email: user.email,
     watchlist: user.watchlist.map((movie) => movie.IMDBId),
     seenlist: user.seenlist.map((movie) => movie.IMDBId),
-    image: user.image
+    image: user.image,
   });
 };
 const login = async (req, res, next) => {
@@ -166,7 +166,6 @@ const login = async (req, res, next) => {
     const error = new HttpError("Logging in failed, please try again!");
     return next(error);
   }
-  
 
   res.status(201).json({
     token,
@@ -175,7 +174,7 @@ const login = async (req, res, next) => {
     email: existingUser.email,
     watchlist: existingUser.watchlist.map((movie) => movie.IMDBId),
     seenlist: existingUser.seenlist.map((movie) => movie.IMDBId),
-    image: existingUser.image
+    image: existingUser.image,
   });
 };
 
@@ -204,6 +203,7 @@ const update = async (req, res, next) => {
     const error = new HttpError("Could not update profile", 500);
     return next(error);
   }
+
   res.json({ image: existingUser.image });
 };
 
