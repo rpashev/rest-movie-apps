@@ -89,8 +89,8 @@ const register = async (req, res, next) => {
         email: user.email,
         username: user.username,
       },
-      "I_like_peanut_butter_banana_protein_shakes",
-      { expiresIn: "10h" }
+      process.env.JWT_SECRET
+      // { expiresIn: "10h" }
     );
   } catch (err) {
     const error = new HttpError("Signing up failed, please try again!");
@@ -159,8 +159,8 @@ const login = async (req, res, next) => {
         email: existingUser.email,
         username: existingUser.username,
       },
-      "I_like_peanut_butter_banana_protein_shakes",
-      { expiresIn: "10h" }
+      process.env.JWT_SECRET
+      // { expiresIn: "10h" }
     );
   } catch (err) {
     const error = new HttpError("Logging in failed, please try again!");

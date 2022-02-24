@@ -7,10 +7,7 @@ export default (req, res, next) => {
     if (!token) {
       throw new HttpError("Authentication failed! Access denied!", 401);
     }
-    const decodedToken = jwt.verify(
-      token,
-      "I_like_peanut_butter_banana_protein_shakes"
-    );
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     req.userData = { userId: decodedToken.userId };
     next();
