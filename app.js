@@ -13,24 +13,16 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// app.use(
-//   cors({
-//     origin: "*",
-//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-//     preflightContinue: false,
-//     optionsSuccessStatus: 204,
-//   })
-// );
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  })
+);
 
-// app.options('*', cors())
-
-app.use(function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", 'http://localhost:3000');
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.setHeader("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-  next();
-});
+app.options("*", cors());
 
 app.use("/auth/", authRoutes);
 app.use(publicRoutes);
