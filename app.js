@@ -21,7 +21,7 @@ app.use(express.json());
 //   })
 // );
 
-app.use(cors());
+app.use(cors({origin: true}));
 
 app.use("/auth/", authRoutes);
 app.use(publicRoutes);
