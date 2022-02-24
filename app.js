@@ -13,13 +13,15 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(
-  cors({
-    credentials: true,
-    // origin: "http://localhost:3000",
-    origin: true,
-  })
-);
+// app.use(
+//   cors({
+//     // credentials: true,
+//     // origin: "http://localhost:3000",
+//     // origin: true,
+//   })
+// );
+
+app.use(cors());
 
 app.use("/auth/", authRoutes);
 app.use(publicRoutes);
