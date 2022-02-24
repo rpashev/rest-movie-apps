@@ -15,9 +15,10 @@ app.use(express.json());
 
 app.use(
   cors({
-    // credentials: true,
-    origin: "http://localhost:3000",
-    // origin: true,
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: true,
+    optionsSuccessStatus: 204,
   })
 );
 
