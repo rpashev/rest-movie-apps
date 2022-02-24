@@ -16,12 +16,12 @@ app.use(express.json());
 app.use(
   cors({
     // credentials: true,
-    // origin: "http://localhost:3000",
+    origin: "http://localhost:3000",
     // origin: true,
   })
 );
 
-app.options('*', cors())
+// app.options('*', cors())
 
 app.use("/auth/", authRoutes);
 app.use(publicRoutes);
