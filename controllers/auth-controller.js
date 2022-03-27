@@ -59,43 +59,29 @@ const register = async (req, res, next) => {
   }
 
   let hashedPassword;
-  try {
-    hashedPassword = await bcrypt.hash(password, 12);
-  } catch (err) {
-    const error = new HttpError("Could not register, please try again!", 500);
-    return next(error);
-  }
+
+  hashedPassword = await bcrypt.hash(password, 12);
+
   const user = new User({
     username,
     email,
     password: hashedPassword,
   });
 
-  try {
-    await user.save();
-  } catch (err) {
-    const error = new HttpError(
-      "Could not register, please try again later!",
-      500
-    );
-    return next(error);
-  }
+  await user.save();
+
   // creating jwt token
   let token;
-  try {
-    token = await jwt.sign(
-      {
-        userId: user.id,
-        email: user.email,
-        username: user.username,
-      },
-      process.env.JWT_SECRET
-      // { expiresIn: "10h" }
-    );
-  } catch (err) {
-    const error = new HttpError("Signing up failed, please try again!");
-    return next(error);
-  }
+
+  token = await jwt.sign(
+    {
+      userId: user.id,
+      email: user.email,
+      username: user.username,
+    },
+    process.env.JWT_SECRET
+    // { expiresIn: "10h" }
+  );
 
   res.status(201).json({
     token,
@@ -119,17 +105,10 @@ const login = async (req, res, next) => {
   }
 
   let existingUser;
-  try {
-    existingUser = await User.findOne({ email: email })
-      .populate("watchlist", "IMDBId")
-      .populate("seenlist", "IMDBId");
-  } catch (err) {
-    const error = new HttpError(
-      "Signing in failed, please try again later.",
-      500
-    );
-    return next(error);
-  }
+
+  existingUser = await User.findOne({ email: email })
+    .populate("watchlist", "IMDBId")
+    .populate("seenlist", "IMDBId");
 
   if (!existingUser) {
     const error = new HttpError("Invalid credentials, could not log in!", 401);
@@ -137,14 +116,8 @@ const login = async (req, res, next) => {
   }
 
   let validPassword = false;
-  try {
-    validPassword = await bcrypt.compare(password, existingUser.password);
-  } catch (err) {
-    const error = new HttpError(
-      "Could not log in, please check credentials and try again!"
-    );
-    return next(error);
-  }
+
+  validPassword = await bcrypt.compare(password, existingUser.password);
 
   if (!validPassword) {
     const error = new HttpError("Invalid password!", 401);
@@ -152,20 +125,16 @@ const login = async (req, res, next) => {
   }
 
   let token; //maybe export creating the token
-  try {
-    token = await jwt.sign(
-      {
-        userId: existingUser.id,
-        email: existingUser.email,
-        username: existingUser.username,
-      },
-      process.env.JWT_SECRET
-      // { expiresIn: "10h" }
-    );
-  } catch (err) {
-    const error = new HttpError("Logging in failed, please try again!");
-    return next(error);
-  }
+
+  token = await jwt.sign(
+    {
+      userId: existingUser.id,
+      email: existingUser.email,
+      username: existingUser.username,
+    },
+    process.env.JWT_SECRET
+    // { expiresIn: "10h" }
+  );
 
   res.status(201).json({
     token,
@@ -183,12 +152,8 @@ const update = async (req, res, next) => {
   const image = req.body.image;
 
   let existingUser;
-  try {
-    existingUser = await User.findById(userId);
-  } catch (err) {
-    const error = new HttpError("Something went wrong!", 500);
-    return next(error);
-  }
+
+  existingUser = await User.findById(userId);
 
   if (!existingUser) {
     const error = new HttpError("Invalid credentials, please log in!", 401);
@@ -197,12 +162,7 @@ const update = async (req, res, next) => {
 
   existingUser.image = image;
 
-  try {
-    await existingUser.save();
-  } catch (err) {
-    const error = new HttpError("Could not update profile", 500);
-    return next(error);
-  }
+  await existingUser.save();
 
   res.json({ image: existingUser.image });
 };

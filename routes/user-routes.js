@@ -1,4 +1,6 @@
 import express from "express";
+
+import catchAsync from "../middleware/catchAsync.js";
 import listController from "../controllers/user-controller/list-controller.js";
 import reviewController from "../controllers/user-controller/review-controller.js";
 import authController from "../controllers/auth-controller.js";
@@ -36,7 +38,7 @@ router.delete(
 router.get("/user/reviews", reviewController.getAllUserReviews);
 
 //user update
-router.post("/user-profile", authController.update);
+router.post("/user-profile", catchAsync(authController.update));
 
 // module.exports = router;
 export default router;
