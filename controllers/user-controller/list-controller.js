@@ -3,13 +3,13 @@ import User from "../../models/user.js";
 
 import helpers from "./helpers.js";
 
-const addToUserList = async (req, res, next, userList) => {
-  // console.log("here")
+const addToUserList = async (req, res, next) => {
+  const userList = req.list;
   let result;
   let movieObjectId;
   let userId = req.userData.userId;
   let user;
-  // console.log(req.body)
+
   if (!req.body.IMDBId) {
     const error = new HttpError("No movie ID is provided!", 400);
     return next(error);
@@ -47,7 +47,8 @@ const addToUserList = async (req, res, next, userList) => {
   res.status(201).json({ [userList]: user[userList] });
 };
 
-const getUserList = async (req, res, next, userList) => {
+const getUserList = async (req, res, next) => {
+  const userList = req.list;
   const userId = req.userData.userId;
   let list;
 
@@ -70,7 +71,8 @@ const getUserList = async (req, res, next, userList) => {
   res.json(list);
 };
 
-const removeFromUserlist = async (req, res, next, userList) => {
+const removeFromUserlist = async (req, res, next) => {
+  const userList = req.list;
   const userId = req.userData.userId;
   const movieId = req.params.movieId;
 
@@ -109,11 +111,6 @@ const removeFromUserlist = async (req, res, next, userList) => {
   res.json("deleted");
 };
 
-// exports.listControllers = {
-//   addToUserList,
-//   getUserList,
-//   removeFromUserlist,
-// };
 export default {
   addToUserList,
   getUserList,
