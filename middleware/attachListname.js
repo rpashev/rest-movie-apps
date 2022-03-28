@@ -1,9 +1,8 @@
-export const attachWatchlist = (req, res, next) => {
-  req.list = "watchlist";
-  next();
-};
-
-export const attachSeenlist = (req, res, next) => {
-  req.list = "seenlist";
+export default (req, res, next) => {
+  if (req.url.includes("watchlist")) {
+    req.list = "watchlist";
+  } else if (req.url.includes("seenlist")) {
+    req.list = "seenlist";
+  }
   next();
 };

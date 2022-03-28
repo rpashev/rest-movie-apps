@@ -1,10 +1,7 @@
 import express from "express";
 
 import catchAsync from "../middleware/catchAsync.js";
-import {
-  attachWatchlist,
-  attachSeenlist,
-} from "../middleware/attachListname.js";
+import attachListname from "../middleware/attachListname.js";
 
 import listController from "../controllers/user-controller/list-controller.js";
 import authController from "../controllers/auth-controller.js";
@@ -13,19 +10,19 @@ const router = express.Router();
 
 //user lists
 
-router.post("/user/watchlist", attachWatchlist, listController.addToUserList);
-router.get("/user/watchlist", attachWatchlist, listController.getUserList);
+router.post("/user/watchlist", attachListname, listController.addToUserList);
+router.get("/user/watchlist", attachListname, listController.getUserList);
 router.delete(
   "/user/watchlist/:movieId",
-  attachWatchlist,
+  attachListname,
   listController.removeFromUserlist
 );
 
-router.post("/user/seenlist", attachSeenlist, listController.addToUserList);
-router.get("/user/seenlist", attachSeenlist, listController.getUserList);
+router.post("/user/seenlist", attachListname, listController.addToUserList);
+router.get("/user/seenlist", attachListname, listController.getUserList);
 router.delete(
   "/user/seenlist/:movieId",
-  attachSeenlist,
+  attachListname,
   listController.removeFromUserlist
 );
 
