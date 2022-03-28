@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth-routes.js";
-import publicRoutes from "./routes/public-routes.js";
+import movieRoutes from "./routes/movie-routes.js";
 import userRoutes from "./routes/user-routes.js";
 import HttpError from "./models/http-error.js";
 import checkAuth from "./middleware/checkAuth.js";
@@ -20,9 +20,10 @@ app.use(
 // app.options("*", cors());
 
 app.use("/auth/", authRoutes);
-app.use(publicRoutes);
 
 app.use(checkAuth);
+
+app.use(movieRoutes);
 app.use(userRoutes);
 
 app.use((req, res, next) => {

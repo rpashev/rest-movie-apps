@@ -2,7 +2,6 @@ import express from "express";
 
 import catchAsync from "../middleware/catchAsync.js";
 import listController from "../controllers/user-controller/list-controller.js";
-import reviewController from "../controllers/user-controller/review-controller.js";
 import authController from "../controllers/auth-controller.js";
 
 const router = express.Router();
@@ -28,14 +27,6 @@ router.get("/user/seenlist", (req, res, next) =>
 router.delete("/user/seenlist/:movieId", (req, res, next) =>
   listController.removeFromUserlist(req, res, next, "seenlist")
 );
-
-//reviews
-router.post("/movies/:movieId/review", reviewController.addReview);
-router.delete(
-  "/movies/:movieId/review/:reviewId",
-  reviewController.deleteReview
-);
-router.get("/user/reviews", reviewController.getAllUserReviews);
 
 //user update
 router.post("/user-profile", catchAsync(authController.update));
