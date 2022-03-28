@@ -3,7 +3,6 @@ import express from "express";
 import catchAsync from "../middleware/catchAsync.js";
 import movieController from "../controllers/movie-controller.js";
 import reviewController from "../controllers/user-controller/review-controller.js";
-import attachUserId from "../middleware/attachUserId.js";
 
 const router = express.Router();
 
