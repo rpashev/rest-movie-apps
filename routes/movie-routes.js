@@ -7,16 +7,8 @@ import attachUserId from "../middleware/attachUserId.js";
 
 const router = express.Router();
 
-router.get(
-  "/movies/:movieId",
-  attachUserId,
-  catchAsync(movieController.getMovie)
-);
-router.get(
-  "/public-library",
-  attachUserId,
-  catchAsync(movieController.getPublicList)
-);
+router.get("/movies/:movieId", catchAsync(movieController.getMovie));
+router.get("/public-library", catchAsync(movieController.getPublicList));
 
 //reviews
 router.post("/movies/:movieId/review", reviewController.addReview);
