@@ -9,6 +9,8 @@ export default (req, res, next) => {
     }
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
+    //check if user still exists or has changed his password?
+
     req.userData = { userId: decodedToken.userId };
     next();
   } catch (err) {
