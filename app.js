@@ -1,6 +1,10 @@
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
+import mongoSanitize from "express-mongo-sanitize";
+import rateLimit from "express-rate-limit";
+import hpp from "hpp";
+
 import authRoutes from "./routes/auth-routes.js";
 import movieRoutes from "./routes/movie-routes.js";
 import userRoutes from "./routes/user-routes.js";
@@ -13,6 +17,17 @@ app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: "10kb" }));
+
+app.use(mongoSanitize());
+
+app.use(hpp()); //against parameter pollution
+
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 100,
+});
+
+app.use(limiter);
 
 app.use(
   cors({
