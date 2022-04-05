@@ -81,7 +81,7 @@ const queryPublicList = async (data, createMovie) => {
   try {
     await createdMovie.save();
   } catch (err) {
-    console.log(err)
+    // console.log(err)
     const error = new HttpError(
       "Could not create movie, internal server error!",
       500

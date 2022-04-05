@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoSanitize from "express-mongo-sanitize";
 import rateLimit from "express-rate-limit";
 import hpp from "hpp";
+import compression from "compression";
 
 import authRoutes from "./routes/auth-routes.js";
 import movieRoutes from "./routes/movie-routes.js";
@@ -18,7 +19,7 @@ app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: "10kb" }));
 
-app.use(mongoSanitize());
+app.use(mongoSanitize()); //data sanitization against NoSQL query injection
 
 app.use(hpp()); //against parameter pollution
 
@@ -28,6 +29,8 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+app.use(compression());
 
 app.use(
   cors({
